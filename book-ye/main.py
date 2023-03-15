@@ -1,7 +1,9 @@
-import logging, collections, csv
-
+import logging
+import csv
+import collections
 import bs4
 import requests
+import lxml
 
 
 logging.basicConfig(level=logging.INFO)
@@ -108,23 +110,23 @@ class Client:
         logger.debug('-' * 200)
 
     def save_results(self):
-        path = 'nonfiction.csv'
+        path = 'fiction.csv'
         with open(path, 'a', encoding="utf-8") as f:
             writer = csv.writer(f, quoting=csv.QUOTE_MINIMAL)
             for item in self.result:
                 writer.writerow(item)
 
     def run(self):
-        number_pages = 639
-        url = 'https://book-ye.com.ua/catalog/nekhudozhnya-literatura/'
+        number_pages = 580
+        url = 'https://book-ye.com.ua/catalog/khudozhnya-literatura/'
         for page in range(2, number_pages + 2):
             text = self.load_page(url)
             self.parse_page(text=text)
             self.save_results()
-            url = f'https://book-ye.com.ua/catalog/nekhudozhnya-literatura/?PAGEN_1={page}'
+            url = f'https://book-ye.com.ua/catalog/khudozhnya-literatura/?PAGEN_1={page}'
             self.result = []
             logger.info(f'Опрацювали {page - 1} сторінку, залишилось {number_pages - (page -1)} сторінок до опрацювання')
-            logger.info('#' * (int((page - 1) / number_pages) * 100))
+            logger.info('#' * int(((page - 1) / number_pages) * 100))
 
 
 if __name__ == '__main__':
